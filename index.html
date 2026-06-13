@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Frisky Routles</title>
+
+    <!-- Important libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.5.3/papaparse.min.js"></script>
+    <!-- Important Leaflet stuff -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+    <!-- END important libraries -->
+
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    <style>
+        /* The element with the id "map" will have this style. */
+        #map { height: 600px; width: 700px }
+    </style>
+    
+</head>
+
+
+<body>
+
+<h1>Guess the Muni line!</h1>
+
+<div id="map"></div>
+<br>
+<br>
+<br>
+<label>What is your guess?</label><br>
+<input id="userGuess"> <br>
+<button id="guessConfirm">Guess!</button> <br>
+<p id="result"></p>
+
+<h2>List of routes:</h2>
+<p id='routesList'></p>
+
+<script src='index.js'></script>
+
+
+<!-- <script>
+    // import Papa from 'papaparse'; // DEBUG?
+
+    var map = L.map('map', {
+        zoomControl: false,
+        // dragging: false
+    });
+    map.setView([51.505, -0.09], 13);
+    
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+    // L.removeControl(zoomControl)
+    // END essential code
+
+// ---------------------------------
+    var marker = L.marker([51.5, -0.09]).addTo(map);
+    var circle = L.circle([51.508, -0.11], {
+        color: 'cyan',
+        fillColor: '#12ed25',
+        fillOpacity: 0.1,
+        radius: 500
+    }).addTo(map);
+
+    var polygon2 = L.polygon([
+        [51.509, -0.08],
+        [51.503, -0.06],
+        [51.51, -0.047]
+    ]).addTo(map);
+
+    // This will open immediately
+    marker.bindPopup("Skeet!").openPopup();
+
+    polygon2.bindPopup("Bazinga!");
+    circle.bindPopup("You got me.");
+
+    var mypop = L.popup()
+        .setLatLng([51.513, -0.09])
+        .setContent("I am a standalone popup not bound to an object like a circle.")
+        .openOn(map);
+
+    var popup = L.popup();
+
+    function onMapClickLOL(e) {
+        // alert("You clicked at " + e.latlng);
+        popup
+            .setLatLng(e.latlng)
+            .setContent("You clicked here: " + e.latlng.toString())
+            .openOn(map);
+    }
+
+    map.on('click', onMapClickLOL); // bind this function (event handler) to the click event
+    map.setView([37.801005, -122.434731]);
+    var marker1 = L.marker([37.779895, -122.421904]).addTo(map);
+    var marker2 = L.marker([37.773571, -122.510014]).addTo(map);
+
+    // // Creating the 5 route
+    // const multilinestring = "MULTILINESTRING ((-122.39524 37.790394, -122.396089 37.789975, -122.398277 37.791721, -122.399161 37.791021, -122.399493 37.790749, -122.40008 37.790308, -122.401388 37.789269, -122.402078 37.788726, -122.402916 37.78809, -122.403443 37.787646, -122.404596 37.786735, -122.405844 37.785749, -122.408079 37.783996, -122.408965 37.783292, -122.410305 37.782235, -122.411638 37.781194, -122.412037 37.781141, -122.413161 37.780998, -122.413689 37.780931, -122.415328 37.780724, -122.416151 37.78062, -122.41682 37.780535, -122.41696 37.780475, -122.418611 37.780265, -122.420046 37.780085, -122.42026 37.780079, -122.420473 37.780074, -122.421904 37.779895, -122.423554 37.779678, -122.426841 37.779263, -122.43006 37.778856, -122.430914 37.778747, -122.431776 37.778637, -122.43342 37.778427, -122.435065 37.778217, -122.436709 37.778011, -122.438378 37.777799, -122.440039 37.777591, -122.441691 37.777378, -122.443334 37.777169, -122.444979 37.776962, -122.444792 37.776021, -122.446483 37.775806, -122.447456 37.775683, -122.44808 37.775604, -122.448862 37.775504, -122.44972 37.775395, -122.45137 37.77518, -122.452823 37.775, -122.453016 37.774975, -122.454695 37.77476, -122.455265 37.774692, -122.456296 37.774559, -122.458384 37.774314, -122.459499 37.774172, -122.460565 37.774036, -122.461632 37.7739, -122.462696 37.773764, -122.463762 37.773629, -122.464824 37.773493, -122.465344 37.773427, -122.465896 37.773403, -122.466964 37.773356, -122.468036 37.773308, -122.469105 37.773261, -122.470175 37.773214, -122.471253 37.773167, -122.471775 37.773144, -122.47231 37.773119, -122.47344 37.773067, -122.474563 37.773016, -122.475626 37.772967, -122.476707 37.772917, -122.477779 37.772868, -122.47885 37.772819, -122.479917 37.77277, -122.480991 37.772721, -122.482062 37.772672, -122.483132 37.772623, -122.484207 37.772574, -122.485275 37.772525, -122.486347 37.772476, -122.487411 37.772428, -122.488484 37.772379, -122.489552 37.77233, -122.490629 37.772281, -122.491701 37.772232, -122.492774 37.772183, -122.493845 37.772134, -122.494916 37.772085, -122.495985 37.772037, -122.497059 37.771988, -122.498126 37.771939, -122.499196 37.77189, -122.50027 37.771841, -122.50134 37.771792, -122.502412 37.771743, -122.503485 37.771694, -122.504557 37.771645, -122.505624 37.771596, -122.506698 37.771547, -122.507763 37.7715, -122.508836 37.77145, -122.509907 37.771401, -122.51005 37.773264, -122.509762 37.773277, -122.509773 37.773589, -122.509957 37.77358))";
+    // // Extract the coordinates part
+    // const coordinatesStr = multilinestring.match(/\(\((.*?)\)\)/)[1];
+
+    // // Split into pairs and convert to [lat, lng]
+    // const coordinates = coordinatesStr.split(', ').map(pair => {
+    //     const [lng, lat] = pair.split(' ').map(Number);
+    //     return [lat, lng]; // Reverse order to [lat, lng]
+    // });
+
+
+    // -------------------------
+    
+    const a = "MULTILINESTRING ((-122.509422 37.779005, -122.507246 37.779067, -122.506177 37.779116, -122.505102 37.779164, -122.504033 37.779213, -122.502959 37.779262, -122.501884 37.779312, -122.500815 37.779355, -122.499743 37.779408, -122.498677 37.77946, -122.497604 37.779509, -122.496536 37.779555, -122.495453 37.779596, -122.494393 37.779654, -122.49331 37.779693, -122.492245 37.779752, -122.49118 37.7798, -122.490109 37.779844, -122.489026 37.779895, -122.487958 37.779952, -122.486891 37.779998, -122.48582 37.780043, -122.484745 37.780097, -122.483675 37.780148, -122.482604 37.780194, -122.481528 37.78023, -122.480463 37.780285, -122.479396 37.780339, -122.478317 37.780386, -122.477252 37.780444, -122.476182 37.78048, -122.475096 37.780533, -122.473995 37.78058, -122.472857 37.780635, -122.472325 37.78066, -122.471788 37.780686, -122.470729 37.780728, -122.46964 37.780773, -122.468576 37.780827, -122.4675 37.780884, -122.466439 37.780929, -122.465365 37.78097, -122.464292 37.781024, -122.463223 37.781075, -122.462152 37.781116, -122.461075 37.781165, -122.460012 37.781218, -122.458871 37.781262, -122.457746 37.781319, -122.456643 37.781371, -122.456453 37.781374, -122.456308 37.781386, -122.455537 37.781436, -122.455293 37.781463, -122.454189 37.781603, -122.453183 37.781722, -122.452156 37.781858, -122.451132 37.781989, -122.450105 37.782121, -122.448126 37.78237, -122.447522 37.782427, -122.445723 37.782523, -122.442806 37.78289, -122.441149 37.783126, -122.439493 37.783313, -122.439296 37.783325, -122.439003 37.783366, -122.438655 37.783437, -122.438327 37.783559, -122.438045 37.783674, -122.43786 37.783722, -122.434575 37.784156, -122.433765 37.784273, -122.432927 37.78436, -122.431217 37.784573, -122.429633 37.784763, -122.428001 37.784958, -122.426453 37.785159, -122.4247 37.785339, -122.42455 37.785278, -122.424183 37.785197, -122.423886 37.785007, -122.423755 37.784889, -122.423624 37.784771, -122.423337 37.78462, -122.423053 37.784558, -122.422851 37.784551, -122.421206 37.784758, -122.41956 37.784965, -122.417914 37.785172, -122.416272 37.785381, -122.415686 37.785454, -122.415033 37.785536, -122.41463 37.785587, -122.412982 37.785794, -122.41216 37.785898, -122.411338 37.786001, -122.409696 37.786207, -122.409341 37.786252, -122.408954 37.786301, -122.408049 37.786414, -122.406411 37.78662, -122.405359 37.786752, -122.404862 37.786815, -122.404596 37.786735, -122.403443 37.787646, -122.402916 37.78809, -122.402078 37.788726, -122.401388 37.789269, -122.40008 37.790308, -122.399493 37.790749, -122.399161 37.791021, -122.398277 37.791721, -122.397396 37.79241, -122.395826 37.791157, -122.394771 37.790296, -122.395069 37.790002))";
+    const coordinates = getCoordinates(a);
+
+    // Debug
+    console.log(coordinates.slice(0, 5)); // First 5 stops
+    console.log(typeof(coordinates));
+// End debug
+
+    
+
+
+        var polyline1 = L.polyline(getCoordinates(a), {color: 'red'}).addTo(map);
+        map.setView(coordinates[Math.floor(coordinates.length / 2)], 13); // center the view on the route
+
+
+
+    // let myFile = newFile(????, "cleanedMuniRoutes.csv");
+    Papa.parse("/testing.csv", {
+        delimiter: ";",
+        complete: function(results) {
+            console.log(results);
+        }
+    });
+
+    // Source - https://stackoverflow.com/a/3151479
+// Posted by Ryan Kinal, modified by community. See post 'Timeline' for change history
+// Retrieved 2026-06-01, License - CC BY-SA 4.0
+
+    var loc = window.location.pathname;
+    var dir = loc.substring(0, loc.lastIndexOf('/'));
+
+    console.log(dir)
+
+    var muniLines = new Array();
+
+    // Now: go through the CSV each elemnt in muniLines is an array with [line number, coordinates]
+
+
+
+
+
+    // METHODS
+
+    // Function that gets a multiline string and returns an arr with all the coordinates of that route
+    function getCoordinates(input) {
+        const coordinatesStr = input.match(/\(\((.*?)\)\)/)[1];
+         // Split into pairs and convert to [lat, lng]
+        const coordinates = coordinatesStr.split(', ').map(pair => {
+            const [lng, lat] = pair.split(' ').map(Number);
+            return [lat, lng]; // Reverse order to [lat, lng]
+        });
+        return coordinates;
+    }
+
+
+</script> -->
+
+</body>
+</html>
