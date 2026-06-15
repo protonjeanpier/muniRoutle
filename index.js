@@ -1,19 +1,30 @@
-const routesPath = 'muniRoutesNoDupes.csv';
+// CONSTRAINTS: the csv file must have a header row with 'ROUTE_NAME', 'shape' containing multiline strings.
+// Otherwise, drawTargetLine() malfunctions.
+
+let routesPath = '';
 let muniRoutes; // array
 let indTarget; // index of muniRoutes
 let routeNames = []; // Array of all route names
 let targetName; // Name of the bus line
 let pastGuesses = []; // Array of user's inputted guesses
+let centerCoordinates;
+let zoomLevel;
 
 const popup = L.popup(); // For popups
-// End initialization
+// End variable declarations
 
 // Set up initial map on SF
+const muniGame = new Game('muniRoutesNoDupes.csv', [37.801005, -122.434731], 13);
+const sacGame = new Game('muniRoutesNoDupes.csv', [38.576641094908176, -121.49348344235615], 12);
+// init(muniGame);
+init(sacGame);
+
 var map = L.map('map', {
     zoomControl: false,
     // dragging: false
 });
-map.setView([37.801005, -122.434731], 13);
+map.setView(centerCoordinates, zoomLevel);
+
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -23,14 +34,22 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 drawTargetLine(routesPath);
 
-const guessButton = document.getElementById('guessConfirm')
+const userGuessInput = document.getElementById('userGuess') // link with html id
+const guessButton = document.getElementById('guessConfirm') // link with html id
+
 guessButton.addEventListener("click", checkGuess)
+userGuessInput.addEventListener('keydown', (e) => { // If we type enter, we check as well
+    if (e.key === 'Enter') {
+        checkGuess();
+    }
+})
 
 // METHODS
 
-// Event: User submits guess. Check and print result after. Log, print all guesses. Draw guessed lines.
+// Event handler: User submits guess. Check and print result after.
+// Log, print all guesses. Draw guessed lines.
 function checkGuess() {
-    const userGuess = document.getElementById('userGuess').value.trim().toUpperCase();
+    const userGuess = userGuessInput.value.trim().toUpperCase();
     pastGuesses.push(userGuess);
     console.log(pastGuesses);
 
@@ -108,7 +127,7 @@ async function drawTargetLine(filePath) {
 
         const targetCoordinates = getCoordinates(muniRoutes[indTarget]['shape']);
         var polyline1 = L.polyline(targetCoordinates, {color: '#ff0da6'}).addTo(map);
-        map.setView(targetCoordinates[Math.floor(targetCoordinates.length / 2)], 13); // center the view on the route
+        map.setView(targetCoordinates[Math.floor(targetCoordinates.length / 2)], zoomLevel); // center the view on the route
 
         console.log('Line coordinates:');
         console.log(targetCoordinates);
@@ -137,3 +156,21 @@ function getCoordinates(input) {
     return coordinates;
 }
 
+// Initializes our variable according to the game/city we want to play.
+function init(game) {
+    routesPath = game.routesPath;
+    centerCoordinates = game.centerCoordinates;
+    zoomLevel = game.zoomLevel;
+    // If mobile: zoom out slightly
+    if (/Mobi|Android/i.test(navigator.userAgent)) {
+        zoomLevel--;
+    }
+
+}
+
+// Constructor for a game. Each game has a separate city and bus lines.
+function Game(filePath, coordinates, zoomLevel = 13) {
+    this.routesPath = filePath;
+    this.centerCoordinates = coordinates;
+    this.zoomLevel = zoomLevel;
+}

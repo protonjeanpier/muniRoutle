@@ -18,24 +18,91 @@
     <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
     <style>
         /* The element with the id "map" will have this style. */
-        #map { height: 600px; width: 700px }
+        /* Responsive map */
+        #map {
+        width: 100%;
+        height: 60vh; /* 60% of the viewport height */
+        min-height: 300px; /* Minimum height for small screens */
+        max-height: 600px; /* Maximum height for large screens */
+        }
+        /* This will set it to dark mode */ 
+        .leaflet-layer,
+        .leaflet-control-zoom-in,
+        .leaflet-control-zoom-out,
+        .leaflet-control-attribution {
+        filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+        }
+        .leaflet-container {
+            background: #000
+        }
+        /* End dark mode */
+
+        /* Responsive input and button */
+        #userGuess {
+        padding: 10px;
+        margin-right: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        width: 60%; /* Takes 60% of the container width */
+        box-sizing: border-box; /* Includes padding in width */
+        }
+
+        #guessConfirm {
+        padding: 10px 16px;
+        background-color: #cc3848;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 30%; /* Takes 30% of the container width */
+        }
+
+        /* Stack input and button vertically on small screens */
+        @media (max-width: 600px) {
+        #userGuess, #guessConfirm {
+            width: 100%; /* Full width on mobile */
+            margin-bottom: 10px; /* Add spacing between stacked elements */
+        }
+        }
+
+        /* Flex container for input and button */
+        .input-container {
+        display: flex;
+        flex-wrap: wrap; /* Allows wrapping on small screens */
+        gap: 10px; /* Spacing between items */
+        margin-bottom: 10px;
+        }
+
+        /* Stack vertically on mobile */
+        @media (max-width: 600px) {
+        .input-container {
+            flex-direction: column; /* Stack vertically */
+        }
+        }
+
     </style>
     
+    <meta name="viewport" content="width=device-width, initial-scale=1" /> 
+
 </head>
 
 
 <body>
-
 <h1>Guess the Muni line!</h1>
-
 <div id="map"></div>
-<br>
-<br>
-<br>
-<label>What is your guess? Scroll down for all options.</label><br>
-<input id="userGuess"> <br>
-<button id="guessConfirm">Guess!</button> <br>
-<p id="result"></p>
+
+<p>
+
+<div class="input-container">
+<label for="userGuess">
+    What is your guess? Scroll down for all options.
+    <input id="userGuess" placeholder="Hmmm...">
+    <button id="guessConfirm">Guess!</button>
+    <p id="result"></p>
+</label>
+</div>
+
+</p>
 
 <h2>List of routes:</h2>
 <p id='routesList'></p>
