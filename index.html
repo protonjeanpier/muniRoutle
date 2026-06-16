@@ -78,12 +78,41 @@
         .input-container {
             flex-direction: column; /* Stack vertically */
         }
+        #routesList {
+            flex-direction: column; /* Stack vertically */
+            max-height: 300px; /* Mobile max height */
+        }
+        .route-item {
+            width: 100%; /* Full width on mobile */
+        }
+        }
+        
+        /* Default: 2 columns on desktop */
+        #routesList {
+            display: flex;
+            flex-wrap: wrap; /* Allow wrapping for 2 columns */
+            gap: 5px;
+            max-height: 600px; /* Desktop max height */
+            overflow-y: auto; /* Enable vertical scrolling */
+            padding: 8px;
+            border-radius: 4px;
         }
 
-    </style>
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1" /> 
+        /* Each route item takes ~48% of the width (2 columns with spacing) */
+        .route-item {
+            color: white;
+            width: calc(50% - 5px); /* 2 columns with gap */
+            box-sizing: border-box;
+            padding: 8px;
+            background: #cc3848;
+            border: none;
+            border-radius: 4px;
+        }
 
+
+    </style>
+    <!-- Mobile friendliness -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" /> 
 </head>
 
 
@@ -105,10 +134,9 @@
 </p>
 
 <h2>List of routes:</h2>
-<p id='routesList'></p>
+<div id='routesList'></div>
 
 <script src='index.js'></script>
-
 
 <!-- <script>
     // import Papa from 'papaparse'; // DEBUG?
